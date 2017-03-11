@@ -1,0 +1,84 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head></h:head>
+<body>
+	<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+		template="/resources/plantilla/plantilla.xhtml">
+		<ui:define name="content">
+			<div class="">
+
+				<p:ajaxStatus style="width:16px;height:16px;" id="ajaxStatusPanel">
+					<f:facet name="start">
+						<h:graphicImage library="images" name="ajaxloading.gif" />
+					</f:facet>
+					<f:facet name="complete">
+						<h:outputText value="" />
+					</f:facet>
+				</p:ajaxStatus>
+				
+				<p:dialog modal="true" widgetVar="statusDialog" header="Status" draggable="false" closable="false" resizable="false">
+				    <p:graphicImage library="images" name="ajax-loader.gif" />
+				</p:dialog>
+
+				<h:form id="formulario" enctype="multipart/form-data">
+
+					<p:growl id="messages" showDetail="true" />
+					<p:messages id="mess" showDetail="true" autoUpdate="true" closable="true" />
+
+					<div class="box box-primary">
+
+						<div class="box-header with-border">
+							<h3 class="box-title">Upload File</h3>
+						</div>
+
+						<h:panelGrid id="grid" columns="3" cellpadding="5">
+
+							<p:outputLabel for="cedula" value="Cedula:" />
+							<p:inputText id="cedula" value="#{registroBean.cedula}"
+								required="true" label="Cedula">
+								<p:ajax update="msgCedula" event="keyup" />
+							</p:inputText>
+							<p:message for="cedula" id="msgCedula" display="icon" />
+
+							<p:outputLabel value="File:" />
+							<p:fileUpload id="file" value="#{registroBean.file}"
+								mode="simple" skinSimple="true" required="true" />
+							<p:message for="file" display="icon" />
+
+						</h:panelGrid>
+					</div>
+					
+					<div align="center">
+						<p:commandButton value="Save" ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);" update="grid"
+							actionListener="#{registroBean.save}" icon="ui-icon-check" style="margin-right:10px" >
+
+						</p:commandButton>
+						<p:commandButton value="Download" ajax="false" icon="ui-icon-arrowthick-1-s" style="margin-right:10px" >
+							
+							<p:fileDownload value="#{registroBean.fileOut}" />
+						</p:commandButton>
+					</div>
+				</h:form>
+				
+				<script type="text/javascript">
+					function start() {
+					    PF('statusDialog').show();
+					}
+					 
+					function stop() {
+					    PF('statusDialog').hide();
+					}
+				</script>
+			</div>
+
+
+		</ui:define>
+	</ui:composition>
+</body>
+</html>
